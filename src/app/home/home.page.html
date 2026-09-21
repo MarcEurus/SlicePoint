@@ -1,20 +1,21 @@
-<ion-header [translucent]="true">
+<ion-header class="app-header">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <div class="header-inner"><div class="brand-title"><span class="brand-mark">SP</span><span>SlicePoint</span></div><button class="theme-toggle" type="button" [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'" [attr.aria-pressed]="isDarkMode()" (click)="toggleTheme()"><ion-icon [name]="isDarkMode() ? 'sunny-outline' : 'moon-outline'" aria-hidden="true"></ion-icon><span>{{ isDarkMode() ? 'Light' : 'Dark' }}</span></button></div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+<ion-content>
+  <main class="page-shell">
+    <section class="hero"><div><p class="eyebrow">Kitchen control center</p><h1>Manage your menu.</h1><p class="hero-copy">Keep every slice, side, and sip ready for the next order.</p></div><button class="primary-button" type="button" (click)="openCreate()"><ion-icon name="add" aria-hidden="true"></ion-icon>Add product</button></section>
+    <section class="summary-row" aria-label="Menu summary"><div><span class="summary-value">{{ products().length }}</span><span>total products</span></div><div><span class="summary-value">{{ productsFor('Pizza').length }}</span><span>pizza options</span></div><div><span class="summary-value">{{ productsFor('Sides').length + productsFor('Drinks').length }}</span><span>sides & drinks</span></div></section>
+    <section class="toolbar" aria-label="Product filters"><label class="search-field"><ion-icon name="search-outline" aria-hidden="true"></ion-icon><span class="sr-only">Search products</span><input type="search" placeholder="Search the menu" [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" /></label><div class="filter-list" role="group" aria-label="Filter by category">@for (category of categories; track category) {<button type="button" [class.active]="selectedCategory() === category" (click)="selectedCategory.set(category)">{{ category }}</button>}</div></section>
+    @if (feedback()) {<p class="feedback" role="status">{{ feedback() }}</p>}
+    <ion-modal [isOpen]="formOpen()" (didDismiss)="closeForm()" aria-labelledby="form-title"><ng-template>
+      <section class="form-panel" aria-labelledby="form-title"><div class="form-heading"><div><p class="eyebrow">Menu item</p><h2 id="form-title">{{ editingId() ? 'Edit product' : 'Add a product' }}</h2></div><button class="icon-button" type="button" aria-label="Close form" (click)="closeForm()">&times;</button></div>
+        <form [formGroup]="form" (ngSubmit)="saveProduct()"><div class="form-grid"><label>Name<input formControlName="name" placeholder="e.g. Truffle Mushroom" /></label><label>Category<select formControlName="category" (change)="onCategoryChange()"><option value="Pizza">Pizza</option><option value="Sides">Sides</option><option value="Drinks">Drinks</option></select></label></div>@if (form.controls.name.invalid && form.controls.name.touched) {<small class="error">Enter a name up to 60 characters.</small>}<label>Description<textarea formControlName="description" rows="3" placeholder="Tell customers what makes it special"></textarea></label>@if (form.controls.description.invalid && form.controls.description.touched) {<small class="error">Add a description up to 180 characters.</small>}@if (formCategory() === 'Pizza') {<div class="form-grid"><label>Medium price <input type="number" formControlName="mediumPrice" min="1" /></label><label>Large price <input type="number" formControlName="largePrice" min="1" /></label></div>} @else {<label>Price <input type="number" formControlName="price" min="1" /></label>}<div class="form-actions"><button class="text-button" type="button" (click)="closeForm()">Cancel</button><button class="primary-button" type="submit">{{ editingId() ? 'Save changes' : 'Add to menu' }}</button></div></form>
+      </section>
+    </ng-template></ion-modal>
+    @if (filteredProducts().length === 0) {<section class="empty-state"><ion-icon name="pizza-outline" aria-hidden="true"></ion-icon><h2>No products found</h2><p>Try a different search or add a new menu item.</p></section>} @else {@for (category of categoryOrder; track category) {@if (productsFor(category).length > 0) {<section class="category-section" [attr.aria-labelledby]="category + '-heading'"><div class="section-heading"><div><p class="eyebrow">Collection</p><h2 [id]="category + '-heading'">{{ category }}</h2></div><span class="count-chip">{{ productsFor(category).length }} items</span></div><div class="product-grid">@for (product of productsFor(category); track product.id) {<article class="product-card"><div class="product-topline"><span class="category-dot" [class]="product.category.toLowerCase()"></span><span>{{ product.category }}</span><div class="card-actions"><button type="button" aria-label="Edit {{ product.name }}" (click)="openEdit(product.id)"><ion-icon name="create-outline"></ion-icon></button><button type="button" aria-label="Delete {{ product.name }}" (click)="deleteProduct(product.id)"><ion-icon name="trash-outline"></ion-icon></button></div></div><h3>{{ product.name }}</h3><p>{{ product.description }}</p><div class="price-line">@if (product.category === 'Pizza') {<span>Medium <strong>₱{{ product.mediumPrice }}</strong></span><span>Large <strong>₱{{ product.largePrice }}</strong></span>} @else {<span>Serving price <strong>₱{{ product.price }}</strong></span>}</div></article>}</div></section>}}}
+    <footer class="site-footer"><div class="footer-brand"><span class="brand-mark">SP</span><strong>SlicePoint</strong></div><p>Fresh ideas, ready for every order.</p><span class="footer-meta">© 2026 SlicePoint</span></footer>
+  </main>
 </ion-content>

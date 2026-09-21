@@ -35,3 +35,33 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+html {
+	scrollbar-gutter: stable;
+}
+
+ion-content::part(scroll) {
+	scrollbar-gutter: stable;
+}
+
+:root {
+	--sp-ink: #202326;
+	--sp-muted: #6f7470;
+	--sp-paper: #fffaf3;
+	--sp-line: #e5dfd5;
+	--sp-surface: #ffffff;
+	--sp-form: #f5eee4;
+	--sp-input: #ffffff;
+	--sp-input-line: #e5dfd5;
+}
+
+:root.dark {
+	--sp-ink: #f4efe7;
+	--sp-muted: #b4bcb4;
+	--sp-paper: #1e2421;
+	--sp-line: #3b453e;
+	--sp-surface: #29312c;
+	--sp-form: #29312c;
+	--sp-input: #202622;
+	--sp-input-line: #536158;
+}
