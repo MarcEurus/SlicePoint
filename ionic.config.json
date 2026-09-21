@@ -1,0 +1,7 @@
+{
+  "name": "SlicePoint",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
